@@ -1,0 +1,176 @@
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+        <div class="container">
+                <h2>Player List</h2>
+                <p>Please chose your players from list below:</p>
+                
+                <table id="calendartable" style="width: 100%" class="table table-bordered table-condensed table-striped">
+                        <tr>
+                            <th>Check</th>
+                            <th>Name</th>
+                            <th>Position</th>
+                            <th>Age</th>
+                            <th>Club</th>
+                        </tr>
+
+                    </table>
+                <!-- <table class="table table-condensed">
+                  <thead> -->
+                    <!-- <tr>
+                      <th></th>
+                      <th>Name</th>
+                      <th>Position</th>
+                      <th>Age</th>
+                      <th>Club</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                        <td><input type="radio" ></td>
+                      <td> <a href="#"></a>David De Gea</td>
+                      <td>GK</td>
+                      <td>28</td>
+                      <td>Manchester United</td></a>
+                    </tr>
+                    <tr>
+                          <td><input type="radio" ></td>
+                          <td> <a href="#"></a>Alisson</td>
+                          <td>GK</td>
+                          <td>27</td>
+                          <td>Liverpool</td></a>
+                    </tr>
+                    <tr>
+                          <td><input type="radio" ></td>
+                          <td> <a href="#"></a>Ederson</td>
+                          <td>GK</td>
+                          <td>26</td>
+                          <td>Manchester City</td></a>
+                    </tr>
+                    <tr>
+                          <td><input type="radio" ></td>
+                          <td> <a href="#"></a>Kepa</td>
+                          <td>GK</td>
+                          <td>25</td>
+                          <td>Chelsea</td></a>
+                        </tr>
+                        <tr>
+                              <td><input type="radio" ></td>
+                          <td> <a href="#"></a>Andrew Robertson</td>
+                          <td>LB</td>
+                          <td>25</td>
+                          <td>Liverpool</td></a>
+                       </tr>
+                          <tr>
+                                  <td><input type="radio" ></td>
+                          <td> <a href="#"></a>Lucas Digne</td>
+                          <td>LB</td>
+                          <td>26</td>
+                          <td>Everton</td></a>
+                          </tr>
+                          <tr>
+                                  <td><input type="radio" ></td>
+                          <td> <a href="#"></a>Ben Chillwell</td>
+                          <td>LB</td>
+                           <td>22</td>
+                           <td>Leicester City</td></a>
+                           </tr>
+                           <td><input type="radio" ></td>
+                           <td> <a href="#"></a>Virgil Van Dijk</td>
+                           <td>CB</td>
+                            <td>28</td>
+                            <td>Liverpool</td></a>
+                            </tr>
+                            <td><input type="radio" ></td>
+                            <td> <a href="#"></a>Aymeric Laporte</td>
+                           <td>CB</td>
+                            <td>25</td>
+                            <td>Manchester City</td></a>
+                            </tr>
+              
+               -->
+                  <!-- </tbody>
+                </table> -->
+              </div>
+              
+              <div class="btn-group-vertical">
+                      <button type="button" class="btn btn-primary">Apple</button>
+                      <button type="button" class="btn btn-primary">Samsung</button>
+                      <button type="button" class="btn btn-primary">Sony</button>
+                    </div>
+
+hey
+<div></div>
+
+<script>
+
+$(document).ready(function() {
+
+setTimeout(function() {
+
+    getPlayers();
+
+}, 1000);
+
+})
+
+
+
+function getPlayers() {
+
+console.log("Hello");
+$.ajax({
+
+    type : "GET",
+
+    url : "http://localhost:9007/Showall",
+
+    success : function(data) {
+
+        var list = $('<ul class="list-group"></ul>');
+
+        $('p').append(list);
+
+        $.each(data, function(index, players) {
+
+            list.append('<li class="list-group-item">' + players.name
+
+                    + " " + players.position + " " + players.age + " " + players.club  + '</li>')
+
+
+                    var table = document.getElementById("calendartable");
+                           var newrow = document.createElement("tr");
+
+                           var checkbox = document.createElement("input");
+                           checkbox.type = "radio";
+                           var tcheck  = newrow.appendChild(checkbox);
+
+                           var tname = newrow.appendChild(document.createElement('td'));
+                           var tposition = newrow.appendChild(document.createElement('td'));
+                           var tage = newrow.appendChild(document.createElement('td'));
+                           var tclub = newrow.appendChild(document.createElement('td'));
+                           tname.innerHTML = players.name;
+                           tposition.innerHTML = players.position;
+                           tage.innerHTML = players.age;
+                           tclub.innerHTML = players.club;
+                           table.appendChild(newrow);
+
+        });
+
+    }
+
+});
+
+}
+
+</script>
+</body>
+</html>
