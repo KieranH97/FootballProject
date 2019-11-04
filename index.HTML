@@ -1,0 +1,228 @@
+ <style>
+  body{
+    background-image: url("BACKGROUND.jpg");
+    background-size: 1300px 675px;
+    background-repeat: no-repeat;
+  }
+</style>
+    
+
+
+
+
+
+<html lang="en">
+
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+  <style>
+  
+  .white {
+    background-color: white!important;
+}
+</style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2 style="color: rgb(255, 249, 249)">Player List </h2>
+    <!-- <p>Please chose your players from list below:</p> -->
+
+    <table id="calendartable" style="width: 100%; opacity: 0.8" class="table table-light table-bordered table-condensed table-striped table white">
+      <tr>
+        <th>Check</th>
+        <th>Name</th>
+        <th>Position</th>
+        <th>Age</th>
+        <th>Club</th>
+      </tr>
+      <tbody id="calendartableBody">
+
+      </tbody>
+    </table>
+
+  
+
+  </div>
+
+  <div class="container">
+    <h2 style="color: rgb(255, 249, 249)">Add Player </h2>
+    <form onsubmit="return postPlayer(this)">
+      <input type="text" name="name" placeholder="Enter Name">
+      <input type="text" name="position" placeholder="Enter Position">
+      <input type="number" name= "age" placeholder="Enter Age  ," min=16 max=100>
+      <input type="text" name="club" placeholder="Enter Club">
+      <input class="btn" type="submit" value="Add Player">
+
+    </form>
+  
+    <button type="button"  class="btn btn-primary" onclick="deletePlayer()">Delete Player</button>
+    <button type="button" class="btn btn-secondary" onclick="editPlayer()">Edit Player</button>
+
+    <h2 style="color: rgb(255, 249, 249)">Edit Player </h2>
+    <form onsubmit="return updatePlayer(this)">
+      <input type= "text" id = "Nametb" name="name" placeholder="Enter Name">
+      <input type="text" id = "Positiontb"name="position" placeholder="Enter Position">
+      <input type="number" id = "Agetb" name= "age" placeholder="Enter Age  ," min=16 max=100>
+      <input type="text" id = "Clubtb" name="club" placeholder="Enter Club">
+      <input class="btn" type="submit" value="Update Player">
+
+    </form>
+
+  </div>
+
+
+  <script>
+
+    $(document).ready(function () {
+      getPlayers();
+    })
+
+    function postPlayer(form) {
+      let body = {};
+      for(let input of form){
+        if(input.name){
+          body[input.name] = input.value;
+        }
+      }
+      body = JSON.stringify(body);
+
+      let request = new XMLHttpRequest();
+      request.open("POST", "http://"+ location.hostname+":9007/players");
+      request.setRequestHeader("Content-Type", "application/json");
+      request.onload = function() {
+        getPlayers();
+      }
+
+      request.send(body);
+
+      return false;
+    }
+
+    function getPlayers() {
+      $.ajax({
+
+        type: "GET",
+
+        url: "http://"+location.hostname+":9007/players",
+
+        success: function (data) {
+            var table = document.getElementById("calendartableBody");
+            table.innerHTML="";
+
+          $.each(data, function (index, players) {
+
+            var newrow = document.createElement("tr");
+
+            var checkbox = document.createElement("input");
+            checkbox.id = players.name;
+            checkbox.name = "player";
+            checkbox.className = "radio-button"
+            checkbox.type = "radio";
+            var tcheck = newrow.appendChild(checkbox);
+            newrow.id = players.name;
+            
+
+            var tname = newrow.appendChild(document.createElement('td'));
+            var tposition = newrow.appendChild(document.createElement('td'));
+            var tage = newrow.appendChild(document.createElement('td'));
+            var tclub = newrow.appendChild(document.createElement('td'));
+            tname.innerHTML = players.name;
+            tname.id = "playername";
+            tposition.innerHTML = players.position;
+            tname.id = "playerposition";
+            tage.innerHTML = players.age;
+            tname.id = "playerage";
+            tclub.innerHTML = players.club;
+            tname.id = "playerclub";
+            table.appendChild(newrow);
+
+          });
+
+        }
+
+      });
+
+    }
+
+    function getSelectedPlayer() {
+      let table = document.getElementById("calendartableBody");
+      let inputs = table.getElementsByClassName("radio-button");
+      for (let input of inputs) {
+        if(input.checked){
+          return input.id;
+        }
+      }
+
+    }
+
+    function deletePlayer() {
+      let request = new XMLHttpRequest();
+      request.open("DELETE", "http://"+location.hostname+":9007/players/" + getSelectedPlayer());
+      request.onload = function() {
+        getPlayers();
+      }
+
+      request.send();
+    }
+
+    function editPlayer(form) {
+      let table = document.getElementById("calendartableBody");
+      let inputs = table.getElementsByClassName("radio-button");
+
+      let Nametb = document.getElementById("Nametb");
+      let Positiontb = document.getElementById("Positiontb");
+      let Agetb = document.getElementById("Agetb");
+      let Clubtb = document.getElementById("Clubtb");
+
+      for (let input of inputs) {
+        if(input.checked){
+          
+          let playerRow = document.getElementById(input.id);
+ 
+          Nametb.value = playerRow.cells[0].innerHTML;
+    
+          Positiontb.value = playerRow.cells[1].innerHTML;
+          Agetb.value = playerRow.cells[2].innerHTML;
+          Clubtb.value = playerRow.cells[3].innerHTML;
+          
+        }
+      }}
+
+      function updatePlayer(){
+
+
+        let body = {};
+        body["name"] = document.getElementById("Nametb").value;
+        body["position"] = document.getElementById("Positiontb").value;
+        body["age"] = document.getElementById("Agetb").value;
+        body["club"] = document.getElementById("Clubtb").value;
+        console.log(body);
+
+        body = JSON.stringify(body);
+
+        let request = new XMLHttpRequest();
+        request.open("PUT", "http://"+ location.hostname+":9007/players");
+        request.setRequestHeader("Content-Type", "application/json");
+        request.onload = function() {
+        getPlayers();
+}
+
+request.send(body);
+
+return false;
+
+    
+    }
+
+  </script>
+</body>
+
+</html>
